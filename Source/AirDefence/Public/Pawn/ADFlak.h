@@ -13,12 +13,30 @@ class AIRDEFENCE_API AADFlak : public APawn
 
 public:
 	AADFlak();
+	
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+private:
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	float HorizontalDeflectionAngle;
+
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	float VerticalDeflectionAngle;
+
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	float MaxHorizontalAngularVelocity;
+
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	float MaxVerticalAngularVelocity;
+
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	int MagazineSize;
+	
+	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	int MaxFiringsPerSecond;
+	
 protected:
 	virtual void BeginPlay() override;
-
-public:	
+	
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };
