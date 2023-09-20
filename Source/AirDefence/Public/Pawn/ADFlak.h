@@ -16,25 +16,28 @@ public:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
 	float HorizontalDeflectionAngle;
 
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
 	float VerticalDeflectionAngle;
 
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
 	float MaxHorizontalAngularVelocity;
 
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
 	float MaxVerticalAngularVelocity;
-
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
-	int MagazineSize;
 	
-	UPROPERTY(EditDefaultsOnly, Category="Barrel")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
 	int MaxFiringsPerSecond;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
+	float RechargeTimePerProjectile;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Barrel")
+	int MagazineSize;
+
 protected:
 	virtual void BeginPlay() override;
 	
