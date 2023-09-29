@@ -4,6 +4,8 @@
 
 #include "GameFramework/Pawn.h"
 
+#include "Math/Vector.h"
+
 #include "ADDrone.generated.h"
 
 UCLASS()
@@ -14,11 +16,23 @@ class AIRDEFENCE_API AADDrone : public APawn
 public:
 	AADDrone();
 
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
+	FVector DestinationCoordinates;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
+	FVector Velocity;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
+	FVector Acceleration;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
+	FVector Jerk;
+	
 protected:
 	virtual void BeginPlay() override;
-
-public:	
+	
 	virtual void Tick(float DeltaTime) override;
-
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 };
