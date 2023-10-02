@@ -17,6 +17,15 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* Root;
+	
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* BarrelStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* FlakFoundationStaticMesh;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
 	float HorizontalDeflectionAngle;
 
