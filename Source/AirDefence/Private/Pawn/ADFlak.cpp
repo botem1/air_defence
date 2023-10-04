@@ -2,6 +2,8 @@
 
 #include "Pawn/ADFlak.h"
 
+#include "ToolContextInterfaces.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 
 AADFlak::AADFlak()
@@ -16,7 +18,11 @@ AADFlak::AADFlak()
 	
 	FlakFoundationStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlakFoundation"));
 	FlakFoundationStaticMesh->AttachToComponent(Root, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	
+}
+
+void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
 FRotator AADFlak::GetBarrelRotation()
@@ -26,9 +32,16 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	if(NewRotation.Pitch > 90) NewRotation.Pitch = 90;
-	if(NewRotation.Pitch < -90) NewRotation.Pitch = -90;
-
+	if(NewRotation.Pitch > 90)
+	{
+		NewRotation.Pitch = 90;
+	}
+	
+	if(NewRotation.Pitch < -90)
+	{
+		NewRotation.Pitch = -90;
+	}
+	
 	NewRotation.Roll = 0;
 
 	BarrelStaticMesh->SetRelativeRotation(NewRotation);
@@ -73,7 +86,3 @@ void AADFlak::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}

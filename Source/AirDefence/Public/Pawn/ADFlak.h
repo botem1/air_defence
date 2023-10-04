@@ -25,7 +25,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Meshes")
 	UStaticMeshComponent* FlakFoundationStaticMesh;
-	
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
 	float MaxHorizontalAngularVelocity;
 
