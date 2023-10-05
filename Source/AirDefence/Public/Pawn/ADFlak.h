@@ -3,6 +3,12 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
+
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
 
 #include "ADFlak.generated.h"
 
@@ -25,6 +31,28 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Meshes")
 	UStaticMeshComponent* FlakFoundationStaticMesh;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputContexts")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreasePitchInputAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreasePitchInputAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreaseYawInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreaseYawInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreaseRollInputAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreaseRollInputAction;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
@@ -65,4 +93,16 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	float DeltaDegree;
+private:
+	void IncreasePitch();
+	void DecreasePitch();
+	
+	void IncreaseYaw();
+	void DecreaseYaw();
+	
+	void IncreaseRoll();
+	void DecreaseRoll();
 };
