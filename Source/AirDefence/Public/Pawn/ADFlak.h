@@ -9,6 +9,7 @@
 #include "InputAction.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
+#include "PlayerController/ADPlayerController.h"
 
 #include "ADFlak.generated.h"
 
@@ -21,7 +22,6 @@ public:
 	AADFlak();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
@@ -91,12 +91,13 @@ protected:
 	
 protected:
 	virtual void BeginPlay() override;
-	
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	float DeltaDegree;
+
 private:
+	UFUNCTION(BlueprintCallable)
 	void IncreasePitch();
 	void DecreasePitch();
 	

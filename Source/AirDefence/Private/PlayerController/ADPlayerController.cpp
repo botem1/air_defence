@@ -2,4 +2,10 @@
 
 #include "PlayerController/ADPlayerController.h"
 
+
 DEFINE_LOG_CATEGORY_STATIC(LogADPlayerController, All, All)
+
+void AADPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
+}

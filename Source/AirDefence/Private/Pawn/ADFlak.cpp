@@ -2,6 +2,8 @@
 
 #include "Pawn/ADFlak.h"
 
+#include "MovieSceneSequenceID.h"
+#include "SNegativeActionButton.h"
 #include "ToolContextInterfaces.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
@@ -12,12 +14,12 @@ AADFlak::AADFlak()
 
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(Root);
-	
+
 	BarrelStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Barrel"));
-	BarrelStaticMesh->AttachToComponent(Root, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	BarrelStaticMesh->SetupAttachment(Root);
 	
 	FlakFoundationStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("FlakFoundation"));
-	FlakFoundationStaticMesh->AttachToComponent(Root, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	FlakFoundationStaticMesh->SetupAttachment(Root);
 
 	DeltaDegree = 10;
 }
@@ -26,17 +28,26 @@ void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-	UEnhancedInputComponent* Input = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 
-	Input->BindAction(IncreasePitchInputAction, ETriggerEvent::Triggered, this, &AADFlak::IncreasePitch);
-	Input->BindAction(DecreasePitchInputAction, ETriggerEvent::Triggered, this, &AADFlak::DecreasePitch);
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	
-	Input->BindAction(IncreaseYawInputAction, ETriggerEvent::Triggered, this, &AADFlak::IncreaseYaw);
-	Input->BindAction(DecreaseYawInputAction, ETriggerEvent::Triggered, this, &AADFlak::DecreaseYaw);
+	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	Subsystem->ClearAllMappings();
 	
-	Input->BindAction(IncreaseRollInputAction, ETriggerEvent::Triggered, this, &AADFlak::IncreaseRoll);
-	Input->BindAction(DecreaseRollInputAction, ETriggerEvent::Triggered, this, &AADFlak::DecreaseRoll);
+	Subsystem->AddMappingContext(DefaultMappingContext, 0);
 	
+	UEnhancedInputComponent* EnhancedInput = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	
+	EnhancedInput->BindAction(IncreasePitchInputAction, ETriggerEvent::Started, this, &AADFlak::IncreasePitch);
+	EnhancedInput->BindAction(DecreasePitchInputAction, ETriggerEvent::Started, this, &AADFlak::DecreasePitch);
+	
+	EnhancedInput->BindAction(IncreaseYawInputAction, ETriggerEvent::Started, this, &AADFlak::IncreaseYaw);
+	EnhancedInput->BindAction(DecreaseYawInputAction, ETriggerEvent::Started, this, &AADFlak::DecreaseYaw);
+	
+	EnhancedInput->BindAction(IncreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::IncreaseRoll);
+	EnhancedInput->BindAction(DecreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::DecreaseRoll);
+
+	DeltaDegree = 10;
 }
 
 FRotator AADFlak::GetBarrelRotation()
@@ -46,18 +57,22 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	if(NewRotation.Pitch > 90)
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - NewRotation: Pitch - %f, Yaw - %f, Roll - %f") ,NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+	
+	if(NewRotation.Roll > 90)
 	{
-		NewRotation.Pitch = 90;
+		UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - new roll is > 90."));
+		NewRotation.Roll = 90;
 	}
 	
-	if(NewRotation.Pitch < -90)
+	if(NewRotation.Roll < -90)
 	{
-		NewRotation.Pitch = -90;
+		UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - new roll is < -90."));
+		NewRotation.Roll = -90;
 	}
 	
-	NewRotation.Roll = 0;
-
+	NewRotation.Pitch = 0;
+	
 	BarrelStaticMesh->SetRelativeRotation(NewRotation);
 }
 
@@ -76,13 +91,13 @@ void AADFlak::SetBarrelHorizontalDeflectionAngle(float NewHorizontalDeflectionAn
 
 float AADFlak::GetBarrelVerticalDeflectionAngle()
 {
-	return GetBarrelRotation().Pitch;
+	return GetBarrelRotation().Roll;
 }
 
 void AADFlak::SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle)
 {
 	FRotator NewBarrelRotation = BarrelStaticMesh->GetRelativeRotation();
-	NewBarrelRotation.Pitch = NewVerticalDeflectionAngle;
+	NewBarrelRotation.Roll = NewVerticalDeflectionAngle;
 
 	SetBarrelRotation(NewBarrelRotation);
 }
@@ -90,13 +105,9 @@ void AADFlak::SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle)
 void AADFlak::BeginPlay()
 {
 	Super::BeginPlay();
-
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	
 	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
 	BarrelStaticMesh->SetRelativeLocation(FVector(0, 0, 100));
-
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay() - testing"));
 }
 
 void AADFlak::Tick(float DeltaTime)
@@ -106,50 +117,65 @@ void AADFlak::Tick(float DeltaTime)
 
 void AADFlak::IncreasePitch()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("ADFlak::IncreasePitch - trigerring event."));
+	UE_LOG(LogADFlak, Warning, TEXT("ADFlak::IncreasePitch - entering."));
 	
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreasePitch - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Pitch += DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreasePitch - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
+	//BarrelStaticMesh->AddRelativeRotation(FRotator(DeltaDegree, 0, 0));
 }
 
 void AADFlak::DecreasePitch()
 {
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreasePitch - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Pitch -= DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreasePitch - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
 }
 
 void AADFlak::IncreaseYaw()
 {
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseYaw - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Yaw += DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseYaw - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
+	//BarrelStaticMesh->AddRelativeRotation(FRotator(0, DeltaDegree, 0));
 }
 
 void AADFlak::DecreaseYaw()
 {
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseYaw - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Yaw -= DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseYaw - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
 }
 
 void AADFlak::IncreaseRoll()
 {
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseRoll - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Roll += DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseRoll - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
+	//BarrelStaticMesh->AddRelativeRotation(FRotator(0, 0, DeltaDegree));
 }
 
 void AADFlak::DecreaseRoll()
 {
 	FRotator NewRotation = GetBarrelRotation();
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseRoll - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Roll -= DeltaDegree;
-	
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseRoll - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
+
 	SetBarrelRotation(NewRotation);
 }
