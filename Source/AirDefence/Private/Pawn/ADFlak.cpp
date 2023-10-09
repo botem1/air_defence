@@ -57,17 +57,13 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - NewRotation: Pitch - %f, Yaw - %f, Roll - %f") ,NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
-	
 	if(NewRotation.Roll > 90)
 	{
-		UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - new roll is > 90."));
 		NewRotation.Roll = 90;
 	}
 	
 	if(NewRotation.Roll < -90)
 	{
-		UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - new roll is < -90."));
 		NewRotation.Roll = -90;
 	}
 	
@@ -117,23 +113,16 @@ void AADFlak::Tick(float DeltaTime)
 
 void AADFlak::IncreasePitch()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("ADFlak::IncreasePitch - entering."));
-	
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreasePitch - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Pitch += DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreasePitch - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
-	//BarrelStaticMesh->AddRelativeRotation(FRotator(DeltaDegree, 0, 0));
 }
 
 void AADFlak::DecreasePitch()
 {
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreasePitch - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Pitch -= DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreasePitch - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
 }
@@ -141,20 +130,15 @@ void AADFlak::DecreasePitch()
 void AADFlak::IncreaseYaw()
 {
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseYaw - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Yaw += DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseYaw - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
-	//BarrelStaticMesh->AddRelativeRotation(FRotator(0, DeltaDegree, 0));
 }
 
 void AADFlak::DecreaseYaw()
 {
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseYaw - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Yaw -= DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseYaw - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
 }
@@ -162,20 +146,15 @@ void AADFlak::DecreaseYaw()
 void AADFlak::IncreaseRoll()
 {
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseRoll - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Roll += DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::IncreaseRoll - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
-	//BarrelStaticMesh->AddRelativeRotation(FRotator(0, 0, DeltaDegree));
 }
 
 void AADFlak::DecreaseRoll()
 {
 	FRotator NewRotation = GetBarrelRotation();
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseRoll - old rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 	NewRotation.Roll -= DeltaDegree;
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::DecreaseRoll - new rotation: Pitch - %f, Yaw - %f, Roll - %f"), NewRotation.Pitch, NewRotation.Yaw, NewRotation.Roll);
 
 	SetBarrelRotation(NewRotation);
 }
