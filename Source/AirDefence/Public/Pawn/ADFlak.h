@@ -56,12 +56,6 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float MaxHorizontalAngularVelocity;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float MaxVerticalAngularVelocity;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
 	int MaxFiringsPerSecond;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
