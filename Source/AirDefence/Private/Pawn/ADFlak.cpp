@@ -2,10 +2,6 @@
 
 #include "Pawn/ADFlak.h"
 
-#include "MovieSceneSequenceID.h"
-#include "SNegativeActionButton.h"
-#include "ToolContextInterfaces.h"
-
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 
 AADFlak::AADFlak()
@@ -28,7 +24,6 @@ void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	
-
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
@@ -46,8 +41,6 @@ void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	EnhancedInput->BindAction(IncreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::IncreaseRoll);
 	EnhancedInput->BindAction(DecreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::DecreaseRoll);
-
-	DeltaDegree = 10;
 }
 
 FRotator AADFlak::GetBarrelRotation()
@@ -100,6 +93,7 @@ void AADFlak::SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle)
 
 void AADFlak::BeginPlay()
 {
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay - log"));
 	Super::BeginPlay();
 	
 	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
@@ -113,6 +107,7 @@ void AADFlak::Tick(float DeltaTime)
 
 void AADFlak::IncreasePitch()
 {
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay - log"));
 	FRotator NewRotation = GetBarrelRotation();
 	NewRotation.Pitch += DeltaDegree;
 
