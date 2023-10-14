@@ -93,7 +93,6 @@ void AADFlak::SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle)
 
 void AADFlak::BeginPlay()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay - log"));
 	Super::BeginPlay();
 	
 	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
@@ -107,7 +106,6 @@ void AADFlak::Tick(float DeltaTime)
 
 void AADFlak::IncreasePitch()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay - log"));
 	FRotator NewRotation = GetBarrelRotation();
 	NewRotation.Pitch += DeltaDegree;
 
