@@ -3,6 +3,13 @@
 #pragma once
 
 #include "GameFramework/Pawn.h"
+#include "GameFramework/Controller.h"
+
+#include "InputMappingContext.h"
+#include "InputAction.h"
+#include "EnhancedInputSubsystems.h"
+#include "EnhancedInputComponent.h"
+#include "PlayerController/ADPlayerController.h"
 
 #include "ADFlak.generated.h"
 
@@ -15,7 +22,6 @@ public:
 	AADFlak();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
@@ -25,19 +31,30 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Meshes")
 	UStaticMeshComponent* FlakFoundationStaticMesh;
+
+protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputContexts")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreasePitchInputAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreasePitchInputAction;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float HorizontalDeflectionAngle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreaseYawInputAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float VerticalDeflectionAngle;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreaseYawInputAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float MaxHorizontalAngularVelocity;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* IncreaseRollInputAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
-	float MaxVerticalAngularVelocity;
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputActions")
+	UInputAction* DecreaseRollInputAction;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
 	int MaxFiringsPerSecond;
 
@@ -48,7 +65,39 @@ protected:
 	int MagazineSize;
 
 protected:
-	virtual void BeginPlay() override;
+	UFUNCTION(BlueprintCallable)
+	FRotator GetBarrelRotation();
 	
+	UFUNCTION(BlueprintCallable)
+	void SetBarrelRotation(FRotator NewRotation);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetBarrelHorizontalDeflectionAngle();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetBarrelHorizontalDeflectionAngle(float NewHorizontalDeflectionAngle);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetBarrelVerticalDeflectionAngle();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle);
+	
+protected:
+	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	float DeltaDegree;
+
+private:
+	UFUNCTION(BlueprintCallable)
+	void IncreasePitch();
+	void DecreasePitch();
+	
+	void IncreaseYaw();
+	void DecreaseYaw();
+	
+	void IncreaseRoll();
+	void DecreaseRoll();
 };
