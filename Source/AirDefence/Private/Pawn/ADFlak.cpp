@@ -86,7 +86,6 @@ void AADFlak::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::BeginPlay - called."));
 	SetActorLocation(FVector(0, 0, 0));
 	SetActorRotation(FRotator(0, 0, 0));
 	
@@ -102,8 +101,6 @@ void AADFlak::Tick(float DeltaTime)
 
 void AADFlak::FireProjectile()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::FireProjectile - called."));
-
 	FTransform ProjectileSpawnTransform(GetBarrelRotation(), CalculateProjectileSpawnLocation());
 	
 	AADProjectile* SpawnedProjectile = GetWorld()->SpawnActorDeferred<AADProjectile>(
@@ -116,25 +113,10 @@ void AADFlak::FireProjectile()
 
 	if(IsValid(SpawnedProjectile))
 	{
-		UE_LOG(LogADFlak, Display, TEXT("AADFlak::FireProjectile - SpawnedProjectile is valid."));
-	} else
-	{
-		UE_LOG(LogADFlak, Error, TEXT("AADFlak::FireProjectile - SpawnedProjectile is not valid."));
-		return;
+		SpawnedProjectile->Initialize(ProjectileBeginSpeed);
+
+		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
 	}
-
-	UE_LOG(
-		LogADFlak, Error, TEXT("AADFlak::FireProjectile - SpawnedProjectile Rotation(Pitch: %f, Roll: %f, Yaw: %f)"),
-		SpawnedProjectile->GetProjectileRotation().Pitch,
-		SpawnedProjectile->GetProjectileRotation().Roll,
-		SpawnedProjectile->GetProjectileRotation().Yaw
-	);
-	
-	SpawnedProjectile->Initialize(ProjectileBeginSpeed);
-
-	UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
-
-	
 }
 
 FVector AADFlak::CalculateProjectileSpawnLocation()

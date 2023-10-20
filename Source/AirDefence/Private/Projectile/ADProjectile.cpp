@@ -18,7 +18,6 @@ AADProjectile::AADProjectile()
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->bAutoActivate = false;
-	//ProjectileMovementComponent->bRotationFollowsVelocity = true;
 }
 
 FVector AADProjectile::GetProjectileLocation()
@@ -53,11 +52,9 @@ void AADProjectile::SetProjectileVelocity(FVector NewVelocity)
 
 void AADProjectile::Initialize(float VelocityMagnitude)
 {
-	UE_LOG(LogADProjectile, Warning, TEXT("AADProjectile::Initialize - called."));
-	
+
 	FRotator ProjectileRotation = GetProjectileRotation();
-	UE_LOG(LogADProjectile, Display, TEXT("AADProjectile::Initialize - ProjectileRotation(Pitch: %f; Roll: %f; Yaw: %f)."), ProjectileRotation.Pitch, ProjectileRotation.Roll, ProjectileRotation.Yaw);
-	
+
 	float Roll = ProjectileRotation.Roll;
 	float Yaw = ProjectileRotation.Yaw;
 
@@ -68,11 +65,7 @@ void AADProjectile::Initialize(float VelocityMagnitude)
 	float dz = VelocityMagnitude * FMath::Cos(FMath::DegreesToRadians(Roll));
 	
 	FVector VelocityVector(-dx, dy, dz);
-	//UE_LOG(LogADProjectile, Display, TEXT("AADProjectile::Initialize - VelocityVector.Rotation()(Pitch: %f; Roll: %f; Yaw: %f)."), VelocityVector.Rotation().Pitch, VelocityVector.Rotation().Roll, VelocityVector.Rotation().Yaw);
 
-	FVector VelocityBegin = GetProjectileLocation();
-	//UE_LOG(LogADFlak, Display, TEXT("AADProjectile::Initialize - VelocityBegin(X: %f; Y: %f; Z: %f)."), VelocityBegin.X, VelocityBegin.Y, VelocityBegin.Z);
-	
 	DrawDebugLine(GetWorld(), GetProjectileLocation(), GetProjectileLocation() + VelocityVector, FColor::Red, true, -1, 0, 3);
 
 	SetProjectileVelocity(VelocityVector);
@@ -82,19 +75,13 @@ void AADProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	UE_LOG(LogADProjectile, Warning, TEXT("AADProjectile::BeginPlay - called."));
-
 	ProjectileMovementComponent->Activate();
 }
 
 void AADProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	UE_LOG(LogADProjectile, Warning, TEXT("AADProjectile::Tick - called."))
 
-	UE_LOG(LogADProjectile, Display, TEXT("AADProjectile::Tick - Velocity Rotation(Pitch: %f; Roll: %f; Yaw: %f)."), GetProjectileVelocity().Rotation().Pitch, GetProjectileVelocity().Rotation().Roll, GetProjectileVelocity().Rotation().Yaw);
-	UE_LOG(LogADProjectile, Display, TEXT("AADProjectile::Tick - Projectile Mesh Rotation(Pitch: %f; Roll: %f; Yaw: %f)."), GetProjectileRotation().Pitch, GetProjectileRotation().Roll, GetProjectileRotation().Yaw);
-	
 	FVector LocationChange = ProjectileMovementComponent->ComputeMoveDelta(GetProjectileVelocity(), DeltaTime);
 
 	FVector CurrentLocation = GetProjectileLocation();
