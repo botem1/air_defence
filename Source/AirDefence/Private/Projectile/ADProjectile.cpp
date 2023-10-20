@@ -65,9 +65,7 @@ void AADProjectile::Initialize(float VelocityMagnitude)
 	float dz = VelocityMagnitude * FMath::Cos(FMath::DegreesToRadians(Roll));
 	
 	FVector VelocityVector(-dx, dy, dz);
-
-	DrawDebugLine(GetWorld(), GetProjectileLocation(), GetProjectileLocation() + VelocityVector, FColor::Red, true, -1, 0, 3);
-
+	
 	SetProjectileVelocity(VelocityVector);
 }
 
@@ -95,7 +93,6 @@ void AADProjectile::Tick(float DeltaTime)
 	SetProjectileRotation(GetProjectileVelocity().Rotation());
 	
 	FVector CurrentVelocity = GetProjectileVelocity();
-	DrawDebugLine(GetWorld(), GetProjectileLocation(), GetProjectileLocation() + CurrentVelocity, FColor::Green, true, -1, 0, 3);
 
 	FVector NewVelocity = ProjectileMovementComponent->ComputeVelocity(CurrentVelocity, DeltaTime);
 
