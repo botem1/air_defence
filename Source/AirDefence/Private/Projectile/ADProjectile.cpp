@@ -17,7 +17,8 @@ AADProjectile::AADProjectile()
 	ProjectileStaticMesh->SetupAttachment(Root);
 
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-	ProjectileMovementComponent->bAutoActivate = false;
+	//ProjectileMovementComponent->bAutoActivate = false;
+	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 }
 
 FVector AADProjectile::GetProjectileLocation()
@@ -79,7 +80,7 @@ void AADProjectile::BeginPlay()
 void AADProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
 	FVector LocationChange = ProjectileMovementComponent->ComputeMoveDelta(GetProjectileVelocity(), DeltaTime);
 
 	FVector CurrentLocation = GetProjectileLocation();
@@ -89,13 +90,14 @@ void AADProjectile::Tick(float DeltaTime)
 		CurrentLocation.Z + LocationChange.Z
 	);
 
+	DrawDebugLine(GetWorld(), NewLocation, NewLocation + ProjectileStaticMesh->GetForwardVector() * 100, FColor::Purple, true, -1, 0, 2);
 	SetProjectileLocation(NewLocation);
-	SetProjectileRotation(GetProjectileVelocity().Rotation());
+	SetActorRotation(GetProjectileVelocity().Rotation());
 	
 	FVector CurrentVelocity = GetProjectileVelocity();
-
+	//UE_LOG(LogADProjectile, Error, TEXT("AADProjectile::Tick - Current Velocity: %s"), *CurrentVelocity.Rotation().ToString());
 	FVector NewVelocity = ProjectileMovementComponent->ComputeVelocity(CurrentVelocity, DeltaTime);
-
+	//UE_LOG(LogADProjectile, Warning, TEXT("AADProjectile::Tick - New Velocity: %s"), *NewVelocity.Rotation().ToString());
 	SetProjectileVelocity(NewVelocity);
 	ProjectileMovementComponent->SetVelocityInLocalSpace(NewVelocity);
 }
