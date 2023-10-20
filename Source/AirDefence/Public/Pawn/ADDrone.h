@@ -19,20 +19,24 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location")
-	FVector DestinationCoordinates;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
-	FVector Velocity;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
-	FVector Acceleration;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement Parameters")
-	FVector Jerk;
+	// BP-functions
+protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* Root;
 	
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* DroneBoxStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* DroneSphereStaticMesh;
+
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
+private:
+	// private properties
+private:
+	// private functions
+	
 };
