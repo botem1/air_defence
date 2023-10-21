@@ -3,6 +3,7 @@
 #include "Pawn/ADFlak.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "GameMode/ADGameMode.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 
@@ -77,21 +78,9 @@ float AADFlak::GetBarrelLength()
 	return 240.0;
 }
 
-AADProjectile* AADFlak::SpawnProjectile(FVector Location, FRotator Rotation)
-{
-	return GetWorld()->SpawnActor<AADProjectile>(ProjectileToSpawnClass, Location, Rotation);
-}
-
 void AADFlak::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SetActorLocation(FVector(0, 0, 0));
-	SetActorRotation(FRotator(0, 0, 0));
-	
-	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
-	
-	BarrelStaticMesh->SetRelativeLocation(FVector(0, 0, 100));
 }
 
 void AADFlak::Tick(float DeltaTime)
@@ -111,9 +100,14 @@ void AADFlak::FireProjectile()
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
 
+	// Since mesh is positioned vertically its initial rotation is next
+	const FRotator BarrelMeshInitDirection = FRotator(90, 0, 0);
+
+	const FVector ProjectileSpawnDirection = (GetActorRotation() + BarrelMeshInitDirection).Vector().GetSafeNormal();
+
 	if(IsValid(SpawnedProjectile))
 	{
-		SpawnedProjectile->Initialize(ProjectileBeginSpeed);
+		SpawnedProjectile->Initialize(ProjectileSpawnDirection, this);
 
 		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
 	}

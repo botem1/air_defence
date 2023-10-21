@@ -2,60 +2,25 @@
 
 #pragma once
 
-#include "GameFramework/Actor.h"
+#include "GameFramework/Pawn.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
 #include "ADProjectile.generated.h"
 
 UCLASS()
-class AIRDEFENCE_API AADProjectile : public AActor
+class AIRDEFENCE_API AADProjectile : public APawn
 {
 	GENERATED_BODY()
 	
 public:
 	AADProjectile();
-
-public:
-	UFUNCTION(BlueprintCallable)
-	FVector GetProjectileLocation();
-
-	UFUNCTION(BlueprintCallable)
-	void SetProjectileLocation(FVector NewLocation);
 	
 	UFUNCTION(BlueprintCallable)
-	FRotator GetProjectileRotation();
-
-	UFUNCTION(BlueprintCallable)
-	void SetProjectileRotation(FRotator NewRotation);
-
-	UFUNCTION(BlueprintCallable)
-	FVector GetProjectileVelocity();
-
-	UFUNCTION(BlueprintCallable)
-	void SetProjectileVelocity(FVector NewVelocity);
-	
-	UFUNCTION(BlueprintCallable)
-	void Initialize(float VelocityMagnitude);
-
+	void Initialize(FVector SpawnDirection, AActor* InTarget);
 protected:
-	// BP-callable functions
-protected:
-	UPROPERTY(EditAnywhere)
-	USceneComponent* Root;
-	
-	UPROPERTY(EditAnywhere, Category = "Meshes")
-	UStaticMeshComponent* ProjectileStaticMesh;
+	UPROPERTY(EditDefaultsOnly, Category = "Meshes")
+	UStaticMeshComponent* ProjectileStaticMeshComponent;
 
-	UPROPERTY(EditAnywhere, Category = "Projectile Movement Component")
+	UPROPERTY(EditDefaultsOnly)
 	UProjectileMovementComponent* ProjectileMovementComponent;
-
-protected:
-	virtual void BeginPlay() override;
-	
-	virtual void Tick(float DeltaTime) override;
-
-private:
-	FVector Velocity;
-	
-	bool bIsMotionEnabled;
 };

@@ -40,9 +40,6 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	AADProjectile* SpawnProjectile(FVector Location, FRotator Rotation);
-
-	UFUNCTION(BlueprintCallable)
 	void FireProjectile();
 
 protected:
@@ -81,9 +78,6 @@ protected:
 	UInputAction* DecreaseRollInputAction;
 
 protected:
-	UPROPERTY(EditAnywhere, Category="Firing")
-	float ProjectileBeginSpeed;
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	int MaxFiringsPerSecond;
 
@@ -92,7 +86,6 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	int MagazineSize;
-
 
 protected:
 	virtual void BeginPlay() override;
