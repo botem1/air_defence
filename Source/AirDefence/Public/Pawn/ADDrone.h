@@ -25,10 +25,20 @@ protected:
 	USceneComponent* Root;
 	
 	UPROPERTY(EditAnywhere, Category = "Meshes")
-	UStaticMeshComponent* DroneBoxStaticMesh;
+	UStaticMeshComponent* PropellerLeftStaticMesh;
 
 	UPROPERTY(EditAnywhere, Category = "Meshes")
-	UStaticMeshComponent* DroneSphereStaticMesh;
+	UStaticMeshComponent* PropellerRightStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* BodyStaticMesh;
+
+protected:
+	UPROPERTY(EditAnywhere)
+	FVector BeginLocation;
+
+	UPROPERTY(EditAnywhere)
+	FVector EndLocation;
 
 protected:
 	virtual void BeginPlay() override;

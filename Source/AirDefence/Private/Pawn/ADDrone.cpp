@@ -11,19 +11,19 @@ AADDrone::AADDrone()
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(Root);
 
-	DroneBoxStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Box"));
-	DroneBoxStaticMesh->SetupAttachment(Root);
+	PropellerLeftStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftProperller"));
+	PropellerLeftStaticMesh->SetupAttachment(Root);
 	
-	DroneSphereStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Sphere"));
-	DroneSphereStaticMesh->SetupAttachment(Root);
+	PropellerRightStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightProperller"));
+	PropellerRightStaticMesh->SetupAttachment(Root);
+	
+	BodyStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body"));
+	BodyStaticMesh->SetupAttachment(Root);
 }
 
 void AADDrone::BeginPlay()
 {
 	Super::BeginPlay();
-
-	DroneBoxStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
-	DroneSphereStaticMesh->SetRelativeLocation(FVector(0, 0, 10));
 }
 
 void AADDrone::Tick(float DeltaTime)
