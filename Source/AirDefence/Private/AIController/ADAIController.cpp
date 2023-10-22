@@ -3,6 +3,14 @@
 
 #include "AIController/ADAIController.h"
 
-AADAIController::AADAIController()
+DEFINE_LOG_CATEGORY_STATIC(LogADAIController, All, All)
+
+AADAIController::AADAIController(FObjectInitializer const& ObjectInitializer)
 {
+	
+}
+
+void AADAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
 }

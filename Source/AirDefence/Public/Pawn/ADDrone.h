@@ -5,6 +5,7 @@
 #include "GameFramework/Pawn.h"
 
 #include "Math/Vector.h"
+#include "AirDefence/Public/AIController/ADAIController.h"
 
 #include "ADDrone.generated.h"
 
@@ -16,7 +17,8 @@ class AIRDEFENCE_API AADDrone : public APawn
 public:
 	AADDrone();
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION(BlueprintCallable)
+	void Initialize(FVector SpawnDirection);
 	
 protected:
 	// BP-functions
@@ -39,14 +41,26 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	FVector EndLocation;
+	
+	UPROPERTY(EditAnywhere)
+	float InitialSpeed;
+
+	UPROPERTY(EditAnywhere)
+	float AccelerationMagnitude;
 
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
+
 private:
-	// private properties
+	FVector ComputeVelocity(FVector InVelocity, FVector InAcceleration, float DeltaTime);
+	FVector ComputeLocationChange(FVector InLocation, FVector InVelocity, float DeltaTime);
+
+	void UpdateVelocity(float DeltaTime);
+	void UpdateLocation(float DeltaTime);
 private:
-	// private functions
-	
+	FVector Velocity;
+
+	FVector Acceleration;
 };

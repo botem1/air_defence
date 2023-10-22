@@ -12,6 +12,9 @@ class AIRDEFENCE_API AADAIController : public AAIController
 {
 	GENERATED_BODY()
 
-public:	
-	AADAIController();
+public:
+	AADAIController(FObjectInitializer const& ObjectInitializer);
+
+protected:
+	virtual void OnPossess(APawn* InPawn) override;
 };
