@@ -38,8 +38,6 @@ public:
 	void Initialize(FVector InitialDirection);
 
 protected:
-	// BP-callable functions
-protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
 	

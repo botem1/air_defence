@@ -114,26 +114,24 @@ void AADFlak::FireProjectile()
 
 FVector AADFlak::CalculateProjectileSpawnLocation()
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::CalculateProjectileSpawnLocation - called."));
 	float Pitch = GetBarrelRotation().Pitch;
 	float Yaw = GetBarrelRotation().Yaw;
+	
 	float BarrelProjectionXY = GetBarrelLength() * FMath::Sin(FMath::DegreesToRadians(Pitch));
-	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - BarrelProjectionXY: %f."), BarrelProjectionXY);
+	
 	float dx = BarrelProjectionXY * FMath::Cos(FMath::DegreesToRadians(Yaw));
 	float dy = BarrelProjectionXY * FMath::Sin(FMath::DegreesToRadians(Yaw));
 	float dz = GetBarrelLength() * FMath::Cos(FMath::DegreesToRadians(Pitch));
-	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - changes: dx = %f; dy = %f; dz = %f."), dx, dy, dz);
 	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(-dx, 0, 0), FColor::Red, true, -1, 0, 3);
 	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(0, dy, 0), FColor::Green, true, -1, 0, 3);
 	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(0, 0, dz), FColor::Blue, true, -1, 0, 3);
 	FVector CurrentBarrelWorldLocation = GetBarrelWorldLocation();
-	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - BarrelWorldLocation: %s."), *GetBarrelWorldLocation().ToString());
+
 	FVector Location(
 		CurrentBarrelWorldLocation.X - dx,
 		CurrentBarrelWorldLocation.Y - dy,
 		CurrentBarrelWorldLocation.Z + dz
 	);
-	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - Location: %s."), *Location.ToString());
 	//DrawDebugSphere(GetWorld(), Location, 30, 8, FColor::Red, true, -1, 0, 2);
 	return Location;
 }
