@@ -29,12 +29,6 @@ public:
 	void SetProjectileRotation(FRotator NewRotation);
 
 	UFUNCTION(BlueprintCallable)
-	FVector GetProjectileVelocity();
-
-	UFUNCTION(BlueprintCallable)
-	void SetProjectileVelocity(FVector NewVelocity);
-	
-	UFUNCTION(BlueprintCallable)
 	void Initialize(FVector InitialDirection);
 
 protected:
@@ -51,9 +45,4 @@ protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
-
-private:
-	FVector Velocity;
-	
-	bool bIsMotionEnabled;
 };
