@@ -52,9 +52,7 @@ void AADProjectile::SetProjectileVelocity(FVector NewVelocity)
 
 void AADProjectile::Initialize(FVector InitialDirection)
 {
-	UE_LOG(LogADProjectile, Warning, TEXT("AADProjectile::Initialize - called."));
 	ProjectileMovementComponent->Velocity = ProjectileMovementComponent->InitialSpeed * InitialDirection;
-	DrawDebugLine(GetWorld(), GetProjectileLocation(), GetProjectileLocation() + ProjectileMovementComponent->Velocity, FColor::Purple, true, -1, 0, 3);
 }
 
 void AADProjectile::BeginPlay()
@@ -65,15 +63,4 @@ void AADProjectile::BeginPlay()
 void AADProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	DrawDebugLine(
-		GetWorld(),
-		GetProjectileLocation(),
-		GetProjectileLocation() + ProjectileMovementComponent->Velocity,
-		FColor::Red,
-		true,
-		-1,
-		0,
-		3
-	);
 }
