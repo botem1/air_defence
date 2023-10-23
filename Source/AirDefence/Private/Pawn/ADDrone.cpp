@@ -21,27 +21,33 @@ AADDrone::AADDrone()
 	BodyStaticMesh->SetupAttachment(Root);
 }
 
-void AADDrone::Initialize(FVector SpawnDirection)
+void AADDrone::Initialize()
 {
-	Velocity = SpawnDirection * InitialSpeed;
+	const FVector InitialDirection = EndLocation - BeginLocation;
+	
+	Velocity = InitialDirection * InitialSpeed;
 
-	Acceleration = SpawnDirection * AccelerationMagnitude;
+	Acceleration = InitialDirection * AccelerationMagnitude;
 
-	BodyStaticMesh->SetRelativeRotation(SpawnDirection.Rotation());
+	BodyStaticMesh->SetRelativeRotation(InitialDirection.Rotation());
+
+	BodyStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
 	SetActorLocation(BeginLocation);
+
+	UE_LOG(LogADDrone, Warning, TEXT("AADDrone::Initialize - actor location: %s"), *GetActorLocation().ToString());
 }
 
 void AADDrone::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	const FVector DroneInitialDirection = (EndLocation - BeginLocation).GetSafeNormal();
-	Initialize(DroneInitialDirection);
+	Initialize();
 }
 
 void AADDrone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	UpdateLocation(DeltaTime);
 }
 
 void AADDrone::UpdateVelocity(float DeltaTime)

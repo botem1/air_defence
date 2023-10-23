@@ -18,7 +18,7 @@ public:
 	AADDrone();
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize(FVector SpawnDirection);
+	void Initialize();
 	
 protected:
 	// BP-functions
