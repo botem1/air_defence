@@ -35,7 +35,7 @@ public:
 	void SetProjectileVelocity(FVector NewVelocity);
 	
 	UFUNCTION(BlueprintCallable)
-	void Initialize(float VelocityMagnitude);
+	void Initialize(FVector InitialDirection);
 
 protected:
 	// BP-callable functions

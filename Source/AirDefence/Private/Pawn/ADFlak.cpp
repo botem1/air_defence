@@ -52,19 +52,22 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	if(NewRotation.Roll > 90)
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - called."));
+
+	if(NewRotation.Pitch > 80)
 	{
-		NewRotation.Roll = 90;
+		NewRotation.Pitch = 80;
 	}
 	
-	if(NewRotation.Roll < -90)
+	if(NewRotation.Pitch < -80)
 	{
-		NewRotation.Roll = -90;
+		NewRotation.Pitch = -80;
 	}
 	
-	NewRotation.Pitch = 0;
+	NewRotation.Roll = 0;
 	
 	BarrelStaticMesh->SetRelativeRotation(NewRotation);
+
 }
 
 FVector AADFlak::GetBarrelWorldLocation()
@@ -77,21 +80,9 @@ float AADFlak::GetBarrelLength()
 	return 240.0;
 }
 
-AADProjectile* AADFlak::SpawnProjectile(FVector Location, FRotator Rotation)
-{
-	return GetWorld()->SpawnActor<AADProjectile>(ProjectileToSpawnClass, Location, Rotation);
-}
-
 void AADFlak::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	SetActorLocation(FVector(0, 0, 0));
-	SetActorRotation(FRotator(0, 0, 0));
-	
-	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
-	
-	BarrelStaticMesh->SetRelativeLocation(FVector(0, 0, 100));
 }
 
 void AADFlak::Tick(float DeltaTime)
@@ -110,34 +101,40 @@ void AADFlak::FireProjectile()
 		nullptr,
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-
+	
 	if(IsValid(SpawnedProjectile))
 	{
-		SpawnedProjectile->Initialize(ProjectileBeginSpeed);
-
+		const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
+		
+		SpawnedProjectile->Initialize(InitialProjectileDirection);
+	
 		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
 	}
 }
 
 FVector AADFlak::CalculateProjectileSpawnLocation()
 {
-	float Roll = GetBarrelRotation().Roll;
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::CalculateProjectileSpawnLocation - called."));
+	float Pitch = GetBarrelRotation().Pitch;
 	float Yaw = GetBarrelRotation().Yaw;
-
-	float BarrelProjectionXY = GetBarrelLength() * FMath::Sin(FMath::DegreesToRadians(Roll));
-
-	float dx = BarrelProjectionXY * FMath::Sin(FMath::DegreesToRadians(Yaw));
-	float dy = BarrelProjectionXY * FMath::Cos(FMath::DegreesToRadians(Yaw));
-	float dz = GetBarrelLength() * FMath::Cos(FMath::DegreesToRadians(Roll));
-
+	float BarrelProjectionXY = GetBarrelLength() * FMath::Sin(FMath::DegreesToRadians(Pitch));
+	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - BarrelProjectionXY: %f."), BarrelProjectionXY);
+	float dx = BarrelProjectionXY * FMath::Cos(FMath::DegreesToRadians(Yaw));
+	float dy = BarrelProjectionXY * FMath::Sin(FMath::DegreesToRadians(Yaw));
+	float dz = GetBarrelLength() * FMath::Cos(FMath::DegreesToRadians(Pitch));
+	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - changes: dx = %f; dy = %f; dz = %f."), dx, dy, dz);
+	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(-dx, 0, 0), FColor::Red, true, -1, 0, 3);
+	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(0, dy, 0), FColor::Green, true, -1, 0, 3);
+	//DrawDebugLine(GetWorld(), GetBarrelWorldLocation(), GetBarrelWorldLocation() + FVector(0, 0, dz), FColor::Blue, true, -1, 0, 3);
 	FVector CurrentBarrelWorldLocation = GetBarrelWorldLocation();
-	
+	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - BarrelWorldLocation: %s."), *GetBarrelWorldLocation().ToString());
 	FVector Location(
 		CurrentBarrelWorldLocation.X - dx,
-		CurrentBarrelWorldLocation.Y + dy,
+		CurrentBarrelWorldLocation.Y - dy,
 		CurrentBarrelWorldLocation.Z + dz
 	);
-	
+	//UE_LOG(LogADFlak, Display, TEXT("AADFlak::CalculateProjectileSpawnLocation - Location: %s."), *Location.ToString());
+	//DrawDebugSphere(GetWorld(), Location, 30, 8, FColor::Red, true, -1, 0, 2);
 	return Location;
 }
 

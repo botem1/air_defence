@@ -40,9 +40,6 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	AADProjectile* SpawnProjectile(FVector Location, FRotator Rotation);
-
-	UFUNCTION(BlueprintCallable)
 	void FireProjectile();
 
 protected:
