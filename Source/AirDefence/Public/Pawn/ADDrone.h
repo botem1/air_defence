@@ -18,7 +18,7 @@ public:
 	AADDrone();
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize();
+	void Initialize(FVector InBeginLocation, FVector InEndLocation, float InInitialSpeed, float InAccelerationMagnitude);
 	
 protected:
 	// BP-functions
