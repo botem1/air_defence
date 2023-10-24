@@ -1,0 +1,24 @@
+пушка:
+    1. начальная скорость снаряда (m/s)
+    2. радиус видимости(m)
+снаряд:
+    -
+дрон:
+    1. начальное местоположение
+    2. конечное местоположение
+    3. начальная скорость
+    4. ускорение
+
+flak:
+    1. projctile begin speed
+    2. visibility radius
+projectile:
+    1. is it a homing projectile(boolean)
+drone:
+    1. begin location
+    2. end location
+    3. initial speed
+    4. acceleration magnitude
+radar:
+    1. list of detected drones
+
