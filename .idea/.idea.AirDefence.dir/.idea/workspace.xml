@@ -8,21 +8,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3b856bb4-69bd-4e2c-9698-de157dc4f28b" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_ADGameMode.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameMode/BP_ADGameMode.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/GameState/BP_ADGameState.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/GameState/BP_ADGameState.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Pawn/BP_ADDrone.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Pawn/BP_ADDrone.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/Blueprints/Pawn/BP_ADFlak.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/Pawn/BP_ADFlak.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/Blueprints/Blueprint_Effect_Smoke.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/Blueprints/Blueprint_Effect_Smoke.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/StarterContent/HDRI/HDRI_Epic_Courtyard_Daylight.uasset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Content/__ExternalActors__/Maps/MainMap/0/JG/SKT90GJU1SPY3443N4ZHFW.uasset" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AirDefence/Private/GameState/ADGameState.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Private/GameState/ADGameState.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Private/Pawn/ADDrone.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Private/Pawn/ADDrone.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AirDefence/Private/Pawn/ADFlak.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Private/Pawn/ADFlak.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Private/Projectile/ADProjectile.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Private/Projectile/ADProjectile.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Public/GameState/ADGameState.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Public/GameState/ADGameState.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Public/Pawn/ADDrone.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Public/Pawn/ADDrone.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Public/Pawn/ADFlak.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Public/Pawn/ADFlak.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AirDefence/Public/Projectile/ADProjectile.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AirDefence/Public/Projectile/ADProjectile.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -135,7 +122,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1698157156691</updated>
-      <workItem from="1698157158990" duration="20977000" />
+      <workItem from="1698157158990" duration="21538000" />
     </task>
     <servers />
   </component>

@@ -89,20 +89,6 @@ AADRadar* AADGameState::SpawnRadar(FVector InitialLocation, const TArray<AADDron
 void AADGameState::BeginPlay()
 {
 	Super::BeginPlay();
-
-	UE_LOG(LogADGameState, Warning, TEXT("AADGameState::BeginPlay - called."));
-
-	FVector DroneBeginLocation(1050, 1000, 1000);
-	FVector DroneEndLocation(0, 0, 300);
-	
-	AADDrone* Drone = SpawnDrone(DroneBeginLocation, DroneEndLocation, 300, 0);
-	
-	UE_LOG(LogADGameState, Display, TEXT("AADGameState::BeginPlay - Drone spawned at: %s"), *DroneBeginLocation.ToString());
-
-	TArray<AADDrone*> DronesOnMap{Drone};
-	AADRadar* Radar = SpawnRadar(FVector(0, 0, 0), DronesOnMap);
-
-	AADFlak* Flak = SpawnFlak(FVector(0, 0, 0), GetDefaultRotation(), Radar, 1000);
 }
 
 void AADGameState::Tick(float DeltaTime)

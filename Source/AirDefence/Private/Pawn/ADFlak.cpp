@@ -100,9 +100,6 @@ void AADFlak::BeginPlay()
 void AADFlak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	AADDrone* CurrentDrone = Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius);
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::Tick - Current Drone Location: %s"), *CurrentDrone->GetActorLocation().ToString())
 }
 
 void AADFlak::FireProjectile(AActor* InTarget)
