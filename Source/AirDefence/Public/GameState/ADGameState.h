@@ -10,5 +10,11 @@ UCLASS()
 class AIRDEFENCE_API AADGameState : public AGameState
 {
 	GENERATED_BODY()
-	
+
+public:
+	AADGameState();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 };
