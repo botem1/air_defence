@@ -18,7 +18,7 @@ public:
 	AADDrone();
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize(FVector InBeginLocation, FVector InEndLocation, float InInitialSpeed, float InAccelerationMagnitude);
+	void Initialize(FVector InBeginLocation, FVector InEndLocation, FVector InInitialDirection, float InInitialSpeed, float InAccelerationMagnitude);
 
 protected:
 	UPROPERTY(EditAnywhere)
@@ -52,9 +52,6 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	FVector ComputeVelocity(FVector InVelocity, FVector InAcceleration, float DeltaTime);
-	FVector ComputeLocationChange(FVector InLocation, FVector InVelocity, float DeltaTime);
-
 	void UpdateVelocity(float DeltaTime);
 	void UpdateLocation(float DeltaTime);
 private:

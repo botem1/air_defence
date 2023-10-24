@@ -2,6 +2,8 @@
 
 #include "Pawn/ADDrone.h"
 
+#include "Kismet/GameplayStatics.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogADDrone, All, All)
 
 AADDrone::AADDrone()
@@ -21,28 +23,16 @@ AADDrone::AADDrone()
 	BodyStaticMesh->SetupAttachment(Root);
 }
 
-void AADDrone::Initialize(FVector InBeginLocation, FVector InEndLocation, float InInitialSpeed, float InAccelerationMagnitude)
+void AADDrone::Initialize(FVector InBeginLocation, FVector InEndLocation, FVector InInitialDirection, float InInitialSpeed, float InAccelerationMagnitude)
 {
 	BeginLocation = InBeginLocation;
 	EndLocation = InEndLocation;
 	InitialSpeed = InInitialSpeed;
 	AccelerationMagnitude = InAccelerationMagnitude;
 	
-	const FVector InitialDirection = (EndLocation - BeginLocation).GetSafeNormal();
-	
-	Velocity = InitialDirection * InitialSpeed;
+	Velocity = InInitialDirection * InitialSpeed;
 
-	Acceleration = InitialDirection * AccelerationMagnitude;
-
-	SetActorLocation(BeginLocation);
-
-	const FRotator DroneInitialRotation(
-		GetActorRotation().Pitch,
-		InitialDirection.Rotation().Yaw,
-		GetActorRotation().Roll
-	);
-
-	SetActorRotation(DroneInitialRotation);
+	Acceleration = InInitialDirection * AccelerationMagnitude;
 }
 
 void AADDrone::BeginPlay()
@@ -53,6 +43,11 @@ void AADDrone::BeginPlay()
 void AADDrone::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(FVector::Dist(GetActorLocation(), EndLocation) > 200)
+	{
+		UpdateLocation(DeltaTime);
+	}
 }
 
 void AADDrone::UpdateVelocity(float DeltaTime)

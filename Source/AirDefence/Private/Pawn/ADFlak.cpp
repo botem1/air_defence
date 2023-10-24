@@ -3,6 +3,7 @@
 #include "Pawn/ADFlak.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Pawn/ADDrone.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 
@@ -43,6 +44,19 @@ void AADFlak::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	
 	EnhancedInput->BindAction(IncreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::IncreaseRoll);
 	EnhancedInput->BindAction(DecreaseRollInputAction, ETriggerEvent::Started, this, &AADFlak::DecreaseRoll);
+}
+
+void AADFlak::Initialize(float InProjectileBeginSpeed, AADRadar* InRadar)
+{
+	ProjectileBeginSpeed = InProjectileBeginSpeed;
+
+	if(IsValid(InRadar))
+	{
+		Radar = InRadar;
+	} else
+	{
+		Radar = nullptr;
+	}
 }
 
 FRotator AADFlak::GetBarrelRotation()
@@ -86,6 +100,9 @@ void AADFlak::BeginPlay()
 void AADFlak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	AADDrone* CurrentDrone = Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius);
+	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::Tick - Current Drone Location: %s"), *CurrentDrone->GetActorLocation().ToString())
 }
 
 void AADFlak::FireProjectile(AActor* InTarget)
@@ -104,7 +121,7 @@ void AADFlak::FireProjectile(AActor* InTarget)
 	{
 		const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
 		
-		SpawnedProjectile->Initialize(InitialProjectileDirection, InTarget);
+		SpawnedProjectile->Initialize(InitialProjectileDirection, ProjectileBeginSpeed, InTarget);
 	
 		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
 	}

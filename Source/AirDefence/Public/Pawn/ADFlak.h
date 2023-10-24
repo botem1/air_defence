@@ -12,6 +12,7 @@
 #include "PlayerController/ADPlayerController.h"
 
 #include "AirDefence/Public/Projectile/ADProjectile.h"
+#include "AirDefence/Public/Radar/ADRadar.h"
 
 #include "ADFlak.generated.h"
 
@@ -24,6 +25,8 @@ public:
 	AADFlak();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+public:
+	void Initialize(float InProjectileBeginSpeed, AADRadar* InRadar);
 
 public:
 	UFUNCTION(BlueprintCallable)
@@ -90,14 +93,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	int MagazineSize;
 
+	UPROPERTY(EditAnywhere)
+	float VisibilityRadius;
 
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
-
-private:
-	float DeltaDegree;
 
 private:
 	FVector CalculateProjectileSpawnLocation();
@@ -110,4 +112,10 @@ private:
 	
 	void IncreaseRoll();
 	void DecreaseRoll();
+
+private:
+	float DeltaDegree;
+
+private:
+	AADRadar* Radar;
 };
