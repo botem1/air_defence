@@ -90,7 +90,7 @@ void AADFlak::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AADFlak::FireProjectile()
+void AADFlak::FireProjectile(AActor* InTarget)
 {
 	FTransform ProjectileSpawnTransform(GetBarrelRotation(), CalculateProjectileSpawnLocation());
 	
@@ -106,7 +106,7 @@ void AADFlak::FireProjectile()
 	{
 		const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
 		
-		SpawnedProjectile->Initialize(InitialProjectileDirection);
+		SpawnedProjectile->Initialize(InitialProjectileDirection, InTarget);
 	
 		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
 	}

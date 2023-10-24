@@ -29,7 +29,7 @@ public:
 	void SetProjectileRotation(FRotator NewRotation);
 
 	UFUNCTION(BlueprintCallable)
-	void Initialize(FVector InitialDirection);
+	void Initialize(FVector InitialDirection, AActor* InTarget = nullptr);
 
 protected:
 	UPROPERTY(EditAnywhere)

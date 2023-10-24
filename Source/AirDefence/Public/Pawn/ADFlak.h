@@ -40,7 +40,7 @@ public:
 
 protected:
 	UFUNCTION(BlueprintCallable)
-	void FireProjectile();
+	void FireProjectile(AActor* InTarget = nullptr);
 
 protected:
 	UPROPERTY(EditAnywhere)

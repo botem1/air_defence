@@ -40,9 +40,16 @@ void AADProjectile::SetProjectileRotation(FRotator NewRotation)
 	ProjectileStaticMesh->SetRelativeRotation(NewRotation);
 }
 
-void AADProjectile::Initialize(FVector InitialDirection)
+void AADProjectile::Initialize(FVector InitialDirection, AActor* InTarget)
 {
 	ProjectileMovementComponent->Velocity = ProjectileMovementComponent->InitialSpeed * InitialDirection;
+
+	if(IsValid(InTarget) && IsValid(InTarget->GetRootComponent()))
+	{
+		ProjectileMovementComponent->bIsHomingProjectile = true;
+		ProjectileMovementComponent->HomingTargetComponent = InTarget->GetRootComponent();
+		ProjectileMovementComponent->HomingAccelerationMagnitude = ProjectileMovementComponent->InitialSpeed;
+	}
 }
 
 void AADProjectile::BeginPlay()
