@@ -52,8 +52,6 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	UE_LOG(LogADFlak, Warning, TEXT("AADFlak::SetBarrelRotation - called."));
-
 	if(NewRotation.Pitch > 80)
 	{
 		NewRotation.Pitch = 80;
