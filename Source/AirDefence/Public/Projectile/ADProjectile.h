@@ -3,6 +3,7 @@
 #pragma once
 
 #include "GameFramework/Actor.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 
 #include "ADProjectile.generated.h"
@@ -12,12 +13,37 @@ class AIRDEFENCE_API AADProjectile : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	AADProjectile();
+
+public:
+	UFUNCTION(BlueprintCallable)
+	FVector GetProjectileLocation();
+
+	UFUNCTION(BlueprintCallable)
+	void SetProjectileLocation(FVector NewLocation);
+	
+	UFUNCTION(BlueprintCallable)
+	FRotator GetProjectileRotation();
+
+	UFUNCTION(BlueprintCallable)
+	void SetProjectileRotation(FRotator NewRotation);
+
+	UFUNCTION(BlueprintCallable)
+	void Initialize(FVector InitialDirection, AActor* InTarget = nullptr);
+
+protected:
+	UPROPERTY(EditAnywhere)
+	USceneComponent* Root;
+	
+	UPROPERTY(EditAnywhere, Category = "Meshes")
+	UStaticMeshComponent* ProjectileStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Projectile Movement Component")
+	UProjectileMovementComponent* ProjectileMovementComponent;
 
 protected:
 	virtual void BeginPlay() override;
-
-public:	
+	
 	virtual void Tick(float DeltaTime) override;
 };

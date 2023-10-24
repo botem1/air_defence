@@ -11,6 +11,8 @@
 #include "EnhancedInputComponent.h"
 #include "PlayerController/ADPlayerController.h"
 
+#include "AirDefence/Public/Projectile/ADProjectile.h"
+
 #include "ADFlak.generated.h"
 
 UCLASS()
@@ -22,6 +24,24 @@ public:
 	AADFlak();
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	FRotator GetBarrelRotation();
+	
+	UFUNCTION(BlueprintCallable)
+	void SetBarrelRotation(FRotator NewRotation);
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetBarrelWorldLocation();
+
+	UFUNCTION(BlueprintCallable)
+	float GetBarrelLength();
+
+protected:
+	UFUNCTION(BlueprintCallable)
+	void FireProjectile(AActor* InTarget = nullptr);
+
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
@@ -31,6 +51,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Meshes")
 	UStaticMeshComponent* FlakFoundationStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "Firing")
+	TSubclassOf<AADProjectile> ProjectileToSpawnClass;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "EnhancedInput|InputContexts")
@@ -55,43 +78,30 @@ protected:
 	UInputAction* DecreaseRollInputAction;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
+	UPROPERTY(EditAnywhere, Category="Firing")
+	float ProjectileBeginSpeed;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	int MaxFiringsPerSecond;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	float RechargeTimePerProjectile;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Barrel")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Firing")
 	int MagazineSize;
 
-protected:
-	UFUNCTION(BlueprintCallable)
-	FRotator GetBarrelRotation();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetBarrelRotation(FRotator NewRotation);
-	
-	UFUNCTION(BlueprintCallable)
-	float GetBarrelHorizontalDeflectionAngle();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetBarrelHorizontalDeflectionAngle(float NewHorizontalDeflectionAngle);
-	
-	UFUNCTION(BlueprintCallable)
-	float GetBarrelVerticalDeflectionAngle();
-	
-	UFUNCTION(BlueprintCallable)
-	void SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle);
-	
+
 protected:
 	virtual void BeginPlay() override;
+	
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	float DeltaDegree;
 
 private:
-	UFUNCTION(BlueprintCallable)
+	FVector CalculateProjectileSpawnLocation();
+	
 	void IncreasePitch();
 	void DecreasePitch();
 	

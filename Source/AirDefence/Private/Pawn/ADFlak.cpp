@@ -2,6 +2,8 @@
 
 #include "Pawn/ADFlak.h"
 
+#include "Kismet/GameplayStatics.h"
+
 DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 
 AADFlak::AADFlak()
@@ -50,58 +52,84 @@ FRotator AADFlak::GetBarrelRotation()
 
 void AADFlak::SetBarrelRotation(FRotator NewRotation)
 {
-	if(NewRotation.Roll > 90)
+	if(NewRotation.Pitch > 80)
 	{
-		NewRotation.Roll = 90;
+		NewRotation.Pitch = 80;
 	}
 	
-	if(NewRotation.Roll < -90)
+	if(NewRotation.Pitch < -80)
 	{
-		NewRotation.Roll = -90;
+		NewRotation.Pitch = -80;
 	}
 	
-	NewRotation.Pitch = 0;
+	NewRotation.Roll = 0;
 	
 	BarrelStaticMesh->SetRelativeRotation(NewRotation);
+
 }
 
-float AADFlak::GetBarrelHorizontalDeflectionAngle()
+FVector AADFlak::GetBarrelWorldLocation()
 {
-	return GetBarrelRotation().Yaw;
+	return BarrelStaticMesh->GetComponentLocation();
 }
 
-void AADFlak::SetBarrelHorizontalDeflectionAngle(float NewHorizontalDeflectionAngle)
+float AADFlak::GetBarrelLength()
 {
-	FRotator NewBarrelRotation = BarrelStaticMesh->GetRelativeRotation();
-	NewBarrelRotation.Yaw = NewHorizontalDeflectionAngle;
-
-	SetBarrelRotation(NewBarrelRotation);
-}
-
-float AADFlak::GetBarrelVerticalDeflectionAngle()
-{
-	return GetBarrelRotation().Roll;
-}
-
-void AADFlak::SetBarrelVerticalDeflectionAngle(float NewVerticalDeflectionAngle)
-{
-	FRotator NewBarrelRotation = BarrelStaticMesh->GetRelativeRotation();
-	NewBarrelRotation.Roll = NewVerticalDeflectionAngle;
-
-	SetBarrelRotation(NewBarrelRotation);
+	return 240.0;
 }
 
 void AADFlak::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	FlakFoundationStaticMesh->SetRelativeLocation(FVector(0, 0, 0));
-	BarrelStaticMesh->SetRelativeLocation(FVector(0, 0, 100));
 }
 
 void AADFlak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void AADFlak::FireProjectile(AActor* InTarget)
+{
+	FTransform ProjectileSpawnTransform(GetBarrelRotation(), CalculateProjectileSpawnLocation());
+	
+	AADProjectile* SpawnedProjectile = GetWorld()->SpawnActorDeferred<AADProjectile>(
+		ProjectileToSpawnClass,
+		ProjectileSpawnTransform,
+		this,
+		nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+	);
+	
+	if(IsValid(SpawnedProjectile))
+	{
+		const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
+		
+		SpawnedProjectile->Initialize(InitialProjectileDirection, InTarget);
+	
+		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
+	}
+}
+
+FVector AADFlak::CalculateProjectileSpawnLocation()
+{
+	float Pitch = GetBarrelRotation().Pitch;
+	float Yaw = GetBarrelRotation().Yaw;
+	
+	float BarrelProjectionXY = GetBarrelLength() * FMath::Sin(FMath::DegreesToRadians(Pitch));
+	
+	float dx = BarrelProjectionXY * FMath::Cos(FMath::DegreesToRadians(Yaw));
+	float dy = BarrelProjectionXY * FMath::Sin(FMath::DegreesToRadians(Yaw));
+	float dz = GetBarrelLength() * FMath::Cos(FMath::DegreesToRadians(Pitch));
+
+	FVector CurrentBarrelWorldLocation = GetBarrelWorldLocation();
+
+	FVector Location(
+		CurrentBarrelWorldLocation.X - dx,
+		CurrentBarrelWorldLocation.Y - dy,
+		CurrentBarrelWorldLocation.Z + dz
+	);
+
+	return Location;
 }
 
 void AADFlak::IncreasePitch()
