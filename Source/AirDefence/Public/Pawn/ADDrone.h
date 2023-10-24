@@ -19,9 +19,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void Initialize(FVector InBeginLocation, FVector InEndLocation, float InInitialSpeed, float InAccelerationMagnitude);
-	
-protected:
-	// BP-functions
+
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
