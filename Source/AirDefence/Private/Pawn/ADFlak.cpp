@@ -100,6 +100,14 @@ void AADFlak::BeginPlay()
 void AADFlak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if(IsValid(Radar) && IsValid(Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius)))
+	{
+		const FVector DroneLocation = Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius)->GetActorLocation();
+		const FVector NextBarrelDirection = (DroneLocation - GetBarrelWorldLocation()).GetSafeNormal();
+
+		SetBarrelRotation(NextBarrelDirection.Rotation() + FRotator(-90, 0, 0));
+	}
 }
 
 void AADFlak::FireProjectile(AActor* InTarget)
