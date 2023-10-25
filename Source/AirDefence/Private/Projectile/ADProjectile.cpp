@@ -92,6 +92,7 @@ void AADProjectile::Tick(float DeltaTime)
 			UGameplayStatics::PlaySoundAtLocation(GetWorld(), SoundExplosion, ExplosionLocation, FRotator::ZeroRotator);
 		}
 
+		GetWorld()->DestroyActor(DroneToReach);
 		GetWorld()->DestroyActor(this);
 	}
 }
