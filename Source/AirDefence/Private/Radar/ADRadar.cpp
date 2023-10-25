@@ -10,30 +10,37 @@
 AADRadar::AADRadar()
 {
 	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.TickGroup = TG_PrePhysics;
 }
 
 AADDrone* AADRadar::GetCurrentDroneWithinRadius(FVector Location, float Radius)
 {
 	return (
-		FVector::Dist(Location, Drones[0]->GetActorLocation()) <= Radius
-		? Drones[0]
+		FVector::Dist(Location, CurrentDrone->GetActorLocation()) <= Radius
+		? CurrentDrone
 		: nullptr
 	);
 }
 
-void AADRadar::Initialize(const TArray<AADDrone*>& InDrones)
+FVector AADRadar::GetCurrentDroneLastTickLocation()
 {
-	Drones = InDrones;
+	return CurrentDrone->GetActorLocation();
+}
+
+void AADRadar::Initialize(AADDrone* InDrone)
+{
+	CurrentDrone = InDrone;
 }
 
 void AADRadar::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void AADRadar::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	LastDroneLocation = CurrentDrone->GetActorLocation();
 }
 

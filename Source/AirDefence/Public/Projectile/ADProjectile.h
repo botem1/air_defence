@@ -8,6 +8,10 @@
 
 #include "ADProjectile.generated.h"
 
+class AADDrone;
+class UNiagaraSystem;
+class USoundBase;
+
 UCLASS()
 class AIRDEFENCE_API AADProjectile : public AActor
 {
@@ -42,8 +46,17 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Projectile Movement Component")
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	UNiagaraSystem* NiagaraSystemExplosion;
+
+	UPROPERTY(EditAnywhere, Category = "Effects")
+	USoundBase* SoundExplosion;
+
 protected:
 	virtual void BeginPlay() override;
 	
 	virtual void Tick(float DeltaTime) override;
+
+private:
+	AADDrone* DroneToReach;
 };

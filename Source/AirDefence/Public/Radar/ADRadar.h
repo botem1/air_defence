@@ -22,7 +22,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	AADDrone* GetCurrentDroneWithinRadius(FVector Location, float Radius);
 
-	void Initialize(const TArray<AADDrone*>& InDrones);
+	UFUNCTION(BlueprintCallable)
+	FVector GetCurrentDroneLastTickLocation();
+	
+	void Initialize(AADDrone* InDrone);
 
 protected:
 	virtual void BeginPlay() override;
@@ -30,5 +33,7 @@ protected:
 	virtual void Tick(float DeltaTime) override;
 
 private:
-	TArray<AADDrone*> Drones;
+	AADDrone* CurrentDrone;
+
+	FVector LastDroneLocation;
 };

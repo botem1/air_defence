@@ -9,7 +9,8 @@ DEFINE_LOG_CATEGORY_STATIC(LogADDrone, All, All)
 AADDrone::AADDrone()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.TickGroup = TG_DuringPhysics;
+	
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(Root);
 

@@ -1,4 +1,7 @@
 1. flak follows drones
+    1.1 flak follows drones without maximum angular velocity
+    1.2 1.1 and maximum velocity took into account
 2. shooting & collision
 3. pop-up menu with game parameters
 4. main menu
+

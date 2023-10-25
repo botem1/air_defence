@@ -10,7 +10,8 @@ DEFINE_LOG_CATEGORY_STATIC(LogADFlak, All, All);
 AADFlak::AADFlak()
 {
 	PrimaryActorTick.bCanEverTick = true;
-
+	PrimaryActorTick.TickGroup = TG_PostPhysics;
+	
 	Root = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
 	SetRootComponent(Root);
 
@@ -100,36 +101,43 @@ void AADFlak::BeginPlay()
 void AADFlak::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(IsValid(Radar) && IsValid(Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius)))
-	{
-		const FVector DroneLocation = Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius)->GetActorLocation();
-		const FVector NextBarrelDirection = (DroneLocation - GetBarrelWorldLocation()).GetSafeNormal();
-
-		SetBarrelRotation(NextBarrelDirection.Rotation() + FRotator(-90, 0, 0));
-	}
 }
 
-void AADFlak::FireProjectile(AActor* InTarget)
+void AADFlak::FireProjectile()
 {
-	FTransform ProjectileSpawnTransform(GetBarrelRotation(), CalculateProjectileSpawnLocation());
-	
-	AADProjectile* SpawnedProjectile = GetWorld()->SpawnActorDeferred<AADProjectile>(
-		ProjectileToSpawnClass,
-		ProjectileSpawnTransform,
-		this,
-		nullptr,
-		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
-	);
-	
-	if(IsValid(SpawnedProjectile))
+	if(IsValid(Radar) && IsValid(Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius)))
 	{
-		const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
+		AADDrone* Target = Radar->GetCurrentDroneWithinRadius(GetActorLocation(), VisibilityRadius);
+
+		const FVector BarrelDirection = (Target->GetActorLocation() - GetBarrelWorldLocation()).GetSafeNormal();
 		
-		SpawnedProjectile->Initialize(InitialProjectileDirection, ProjectileBeginSpeed, InTarget);
+		SetBarrelRotation(BarrelDirection.Rotation() + FRotator(-90, 0, 0));
+		
+		FTransform ProjectileSpawnTransform(GetBarrelRotation(), CalculateProjectileSpawnLocation());
 	
-		UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
+		AADProjectile* SpawnedProjectile = GetWorld()->SpawnActorDeferred<AADProjectile>(
+			ProjectileToSpawnClass,
+			ProjectileSpawnTransform,
+			this,
+			nullptr,
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+		);
+	
+		if(IsValid(SpawnedProjectile))
+		{
+			const FVector InitialProjectileDirection = (CalculateProjectileSpawnLocation() - GetBarrelWorldLocation()).GetSafeNormal();
+		
+			SpawnedProjectile->Initialize(InitialProjectileDirection, ProjectileBeginSpeed, Target);
+	
+			UGameplayStatics::FinishSpawningActor(SpawnedProjectile, ProjectileSpawnTransform);
+		}
 	}
+
+}
+
+FVector AADFlak::GetDroneVelocityThisTick(FVector CurrentDroneLocation, float DeltaTime)
+{
+	return (CurrentDroneLocation - Radar->GetCurrentDroneLastTickLocation()) / DeltaTime;
 }
 
 FVector AADFlak::CalculateProjectileSpawnLocation()

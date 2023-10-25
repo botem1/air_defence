@@ -9,6 +9,7 @@
 class AADDrone;
 class AADFlak;
 class AADRadar;
+class AMyDefaultPawn;
 
 UCLASS()
 class AIRDEFENCE_API AADGameState : public AGameState
@@ -23,7 +24,9 @@ protected:
 	
 	AADFlak* SpawnFlak(FVector InitialLocation, FRotator InitialRotation, AADRadar* InRadar, float ProjectileBeginSpeed);
 
-	AADRadar* SpawnRadar(FVector InitialLocation, const TArray<AADDrone*>& Drones);
+	AADRadar* SpawnRadar(FVector InitialLocation, AADDrone* Drone);
+
+	AMyDefaultPawn* SpawnDefaultPawn(FVector InitialLocation, AADFlak* InFlak);
 protected:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> DroneToSpawnClass;
@@ -33,6 +36,9 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AActor> RadarToSpawnClass;
+	
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> DefaultPawnToSpawnClass;
 
 protected:
 	virtual void BeginPlay() override;
@@ -40,4 +46,5 @@ protected:
 
 private:
 	FRotator GetDefaultRotation();
+	FVector GetDefaultLocation();
 };

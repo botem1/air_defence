@@ -2,9 +2,11 @@
 
 #include "GameState/ADGameState.h"
 
+#include "ADDefaultPawn/MyDefaultPawn.h"
 #include "AirDefence/Public/Pawn/ADDrone.h"
 #include "AirDefence/Public/Pawn/ADFlak.h"
 #include "AirDefence/Public/Radar/ADRadar.h"
+#include "AirDefence/Public/ADDefaultPawn/MyDefaultPawn.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -66,7 +68,7 @@ AADFlak* AADGameState::SpawnFlak(FVector InitialLocation, FRotator InitialRotati
 	return SpawnedFlak;
 }
 
-AADRadar* AADGameState::SpawnRadar(FVector InitialLocation, const TArray<AADDrone*>& Drones)
+AADRadar* AADGameState::SpawnRadar(FVector InitialLocation, AADDrone* Drone)
 {
 		AADRadar* SpawnedRadar = GetWorld()->SpawnActorDeferred<AADRadar>(
 		RadarToSpawnClass,
@@ -78,7 +80,7 @@ AADRadar* AADGameState::SpawnRadar(FVector InitialLocation, const TArray<AADDron
 
 	if(IsValid(SpawnedRadar))
 	{
-		SpawnedRadar->Initialize(Drones);
+		SpawnedRadar->Initialize(Drone);
 
 		UGameplayStatics::FinishSpawningActor(SpawnedRadar, FTransform(GetDefaultRotation(), InitialLocation));
 	}
@@ -86,9 +88,41 @@ AADRadar* AADGameState::SpawnRadar(FVector InitialLocation, const TArray<AADDron
 	return SpawnedRadar;
 }
 
+AMyDefaultPawn* AADGameState::SpawnDefaultPawn(FVector InitialLocation, AADFlak* InFlak)
+{
+	AMyDefaultPawn* SpawnedDefaultPawn = GetWorld()->SpawnActorDeferred<AMyDefaultPawn>(
+		DefaultPawnToSpawnClass,
+		FTransform(GetDefaultRotation(), InitialLocation),
+		nullptr,
+		nullptr,
+		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+	);
+
+	if(IsValid(SpawnedDefaultPawn))
+	{
+		SpawnedDefaultPawn->Initialize(InFlak);
+
+		UGameplayStatics::FinishSpawningActor(SpawnedDefaultPawn, FTransform(GetDefaultRotation(), InitialLocation));
+	}
+
+	return SpawnedDefaultPawn;
+}
+
 void AADGameState::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	FVector DroneBeginLocation(3000, 3000, 2000);
+	FVector DroneEndLocation(-2000, -2000, 2000);
+	
+	AADDrone* Drone = SpawnDrone(DroneBeginLocation, DroneEndLocation, 700, 30);
+	
+	AADRadar* Radar = SpawnRadar(GetDefaultLocation(), Drone);
+
+	AADFlak* Flak = SpawnFlak(FVector::ZeroVector, FRotator::ZeroRotator, Radar, 7000);
+
+	AMyDefaultPawn* DefaultPawn = SpawnDefaultPawn(FVector(1000, 1000, 1000), Flak);
+	GetWorld()->GetFirstPlayerController()->Possess(DefaultPawn);
 }
 
 void AADGameState::Tick(float DeltaTime)
@@ -99,4 +133,9 @@ void AADGameState::Tick(float DeltaTime)
 FRotator AADGameState::GetDefaultRotation()
 {
 	return FRotator(0, 0, 0);
+}
+
+FVector AADGameState::GetDefaultLocation()
+{
+	return FVector(0, 0, 0);
 }

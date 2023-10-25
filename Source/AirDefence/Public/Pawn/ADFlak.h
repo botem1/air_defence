@@ -28,6 +28,9 @@ public:
 public:
 	void Initialize(float InProjectileBeginSpeed, AADRadar* InRadar);
 
+	UFUNCTION(BlueprintCallable)
+	void FireProjectile();
+
 public:
 	UFUNCTION(BlueprintCallable)
 	FRotator GetBarrelRotation();
@@ -42,9 +45,9 @@ public:
 	float GetBarrelLength();
 
 protected:
-	UFUNCTION(BlueprintCallable)
-	void FireProjectile(AActor* InTarget = nullptr);
 
+	UFUNCTION(BlueprintCallable)
+	FVector GetDroneVelocityThisTick(FVector CurrentLocation, float DeltaTime);
 protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* Root;
